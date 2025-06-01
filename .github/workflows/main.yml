@@ -17,7 +17,7 @@ jobs:
 
       - name: Update server status
         run: |
-          echo '{ "server_status": '${{ github.event.inputs.status }}' }' > update.json
+          echo '{ "server_status": '${{ github.event.inputs.status }}' }' > status.json
 
       - name: Commit and push changes
         run: |
