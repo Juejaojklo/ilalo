@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       status:
-        description: 'Pilih status server (true / false)'
+        description: 'Select server status (true or false)'
         required: true
         default: 'true'
         type: choice
@@ -21,21 +21,21 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Buat file status.json dengan nilai terbaru
+      - name: Generate pretty-formatted status.json
         run: |
-          echo "{ \"server_status\": ${STATUS} }" > status.json
+          echo "{\"server_status\": $STATUS}" | jq '.' > status.json
         env:
           STATUS: ${{ github.event.inputs.status }}
 
-      - name: Konfigurasi Git
+      - name: Configure Git
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
 
-      - name: Commit dan Push Perubahan
+      - name: Commit and Push Changes
         run: |
           git add status.json
-          git commit -m "Update server_status ke ${STATUS}"
+          git commit -m "Update server status to $STATUS"
           git push
         env:
           STATUS: ${{ github.event.inputs.status }}
