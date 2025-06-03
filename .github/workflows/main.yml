@@ -23,6 +23,6 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add update.json
+          git add status.json
           git commit -m "Update server status to ${{ github.event.inputs.status }}"
           git push
