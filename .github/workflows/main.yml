@@ -1,41 +1,38 @@
-name: Update Server Status
+name: Toggle Server Status
 
 on:
   workflow_dispatch:
-    inputs:
-      status:
-        description: 'Select server status (true or false)'
-        required: true
-        default: 'true'
-        type: choice
-        options:
-          - true
-          - false
 
 jobs:
-  update_status:
-    name: Update Server Status File
+  toggle_status:
+    name: Toggle Server Status
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      - name: Generate pretty-formatted status.json
+      - name: Toggle Status
+        id: toggle
         run: |
-          echo "{\"server_status\": $STATUS}" | jq '.' > status.json
-        env:
-          STATUS: ${{ github.event.inputs.status }}
+          if [ -f "status.json" ]; then
+            current_status=$(jq -r '.server_status' status.json)
+            [[ "$current_status" == "true" ]] && new_status=false || new_status=true
+          else
+            new_status=false
+          fi
+          jq -n --argjson status $new_status '{server_status: $status}' > status.json
+          echo "status_value=$new_status" >> $GITHUB_OUTPUT
 
       - name: Configure Git
         run: |
-          git config --global user.name "GitHub Actions"
-          git config --global user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
 
       - name: Commit and Push Changes
         run: |
           git add status.json
-          git commit -m "Update server status to $STATUS"
+          git commit -m "Toggle server status to ${{ steps.toggle.outputs.status_value }}"
           git push
         env:
-          STATUS: ${{ github.event.inputs.status }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
