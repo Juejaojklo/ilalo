@@ -2,7 +2,7 @@
     "app_server_status" : true,
     "app_beta_status" : false,
     "game_version" : "1.0.0",
-    "game_url" : "https://samp-mobile.shop/launcherarizona.apk",
+    "game_url" : "",
     "version_code": 130,
     "url_cache_files": "https://samp-mobile.shop/files.json"
 }
