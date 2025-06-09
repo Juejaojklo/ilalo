@@ -1,5 +1,5 @@
 {
-  "servers": [
+  "query": [
     {
       "ip": "play.uifserver.net",
       "port": "7776"
